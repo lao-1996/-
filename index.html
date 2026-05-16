@@ -1404,39 +1404,35 @@
     }
 
     // 自动检测移动端并进入沉浸模式
-    window.addEventListener('load', function() {
+    (function() {
         // 检测是否是移动设备
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|MicroMessenger/i.test(navigator.userAgent);
         
-        if (isMobile) {
-            // 添加双击进入沉浸模式的功能
-            const container = document.getElementById('gameContainer');
-            let lastTap = 0;
-            
-            container.addEventListener('touchend', function(e) {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTap;
-                if (tapLength < 300 && tapLength > 0) {
-                    // 双击切换沉浸模式
-                    if (window.isImmersiveMode) {
-                        exitImmersiveMode();
-                    } else {
-                        enterImmersiveMode();
-                    }
-                    e.preventDefault();
+        if (!isMobile) return;
+        
+        // 添加双击进入沉浸模式的功能
+        const container = document.getElementById('gameContainer');
+        let lastTap = 0;
+        
+        document.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                if (window.isImmersiveMode) {
+                    exitImmersiveMode();
+                } else {
+                    enterImmersiveMode();
                 }
-                lastTap = currentTime;
-            });
-            
-            // 游戏开始后自动进入沉浸模式
-            const originalStartGame = window.startGame;
-            if (originalStartGame) {
-                window.startGame = function() {
-                    originalStartGame();
-                    setTimeout(enterImmersiveMode, 100);
-                };
             }
-        }
-    });
+            lastTap = currentTime;
+        }, true);
+        
+        // Hook游戏开始按钮
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'startButton' || e.target.closest('#startButton')) {
+                setTimeout(enterImmersiveMode, 200);
+            }
+        }, true);
+    })();
     </script>
 </html>
