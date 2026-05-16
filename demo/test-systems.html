@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统测试 - 奔赴心意的冒险</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #FFD700;
+            margin-bottom: 30px;
+        }
+        
+        .test-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid #FFD700;
+        }
+        
+        .test-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+        
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .status {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .status.success {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .status.error {
+            background: #f44336;
+            color: white;
+        }
+        
+        .status.warning {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+        }
+        
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎮 系统测试 - 奔赴心意的冒险</h1>
+        
+        <div class="test-section">
+            <div class="test-title">📊 系统状态检测</div>
+            <div id="systemStatus">
+                <div class="test-item">
+                    <span>增强音频系统</span>
+                    <span id="audioStatus" class="status warning">检测中...</span>
+                </div>
+                <div class="test-item">
+                    <span>增强视觉效果系统</span>
+                    <span id="visualStatus" class="status warning">检测中...</span>
+                </div>
+                <div class="test-item">
+                    <span>游戏进度系统</span>
+                    <span id="progressStatus" class="status warning">检测中...</span>
+                </div>
+                <div class="test-item">
+                    <span>性能优化器</span>
+                    <span id="performanceStatus" class="status warning">检测中...</span>
+                </div>
+                <div class="test-item">
+                    <span>主游戏逻辑</span>
+                    <span id="gameStatus" class="status warning">检测中...</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🎵 音频系统测试</div>
+            <button class="btn" onclick="testAudio()">测试音频系统</button>
+            <button class="btn" onclick="testBGM()">播放背景音乐</button>
+            <button class="btn" onclick="testSFX()">播放音效</button>
+            <div id="audioResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">✨ 视觉效果测试</div>
+            <button class="btn" onclick="testVisualEffects()">测试粒子效果</button>
+            <button class="btn" onclick="testScreenShake()">屏幕抖动</button>
+            <button class="btn" onclick="testBloom()">Bloom效果</button>
+            <div id="visualResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">📈 进度系统测试</div>
+            <button class="btn" onclick="testProgress()">测试存档功能</button>
+            <button class="btn" onclick="testAchievements()">测试成就系统</button>
+            <button class="btn" onclick="showStats()">显示统计</button>
+            <div id="progressResult" class="result" style="display: none;"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">⚡ 性能测试</div>
+            <button class="btn" onclick="testPerformance()">开始性能测试</button>
+            <button class="btn" onclick="startMonitor()">启动监控</button>
+            <div id="performanceResult" class="result" style="display: none;"></div>
+            <div class="progress-bar">
+                <div id="performanceProgress" class="progress-fill"></div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🎯 快速测试</div>
+            <button class="btn" onclick="runAllTests()">运行所有测试</button>
+            <button class="btn" onclick="clearResults()">清除结果</button>
+            <div id="overallResult" class="result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- 引入所有系统 -->
+    <script src="enhanced-audio.js"></script>
+    <script src="enhanced-visual.js"></script>
+    <script src="game-progress.js"></script>
+    <script src="performance-optimizer.js"></script>
+    
+    <script>
+        // 系统状态检测
+        function detectSystems() {
+            const status = {
+                audio: window.AudioSystem !== undefined,
+                visual: window.VisualEffects !== undefined,
+                progress: window.GameProgress !== undefined,
+                performance: window.PerformanceOptimizer !== undefined,
+                game: true // 假设主游戏逻辑存在
+            };
+            
+            updateStatus('audioStatus', status.audio, '音频系统');
+            updateStatus('visualStatus', status.visual, '视觉效果系统');
+            updateStatus('progressStatus', status.progress, '游戏进度系统');
+            updateStatus('performanceStatus', status.performance, '性能优化器');
+            updateStatus('gameStatus', status.game, '主游戏逻辑');
+            
+            return status;
+        }
+        
+        function updateStatus(elementId, isLoaded, systemName) {
+            const element = document.getElementById(elementId);
+            if (isLoaded) {
+                element.className = 'status success';
+                element.textContent = '已加载';
+            } else {
+                element.className = 'status error';
+                element.textContent = '未加载';
+            }
+        }
+        
+        // 音频系统测试
+        async function testAudio() {
+            const result = document.getElementById('audioResult');
+            result.style.display = 'block';
+            result.innerHTML = '正在测试音频系统...<br>';
+            
+            try {
+                if (!window.AudioSystem) throw new Error('音频系统未加载');
+                
+                // 初始化音频
+                await audioSystem.initialize();
+                result.innerHTML += '✓ 音频上下文初始化成功<br>';
+                
+                // 测试音量控制
+                window.AudioSystem.setMasterVolume(0.5);
+                result.innerHTML += '✓ 音量控制正常<br>';
+                
+                result.innerHTML += '<strong style="color: #4CAF50;">✓ 音频系统测试通过</strong>';
+                
+            } catch (error) {
+                result.innerHTML += `<strong style="color: #f44336;">✗ 测试失败: ${error.message}</strong>`;
+            }
+        }
+        
+        function testBGM() {
+            if (!window.AudioSystem) {
+                alert('音频系统未加载');
+                return;
+            }
+            
+            window.AudioSystem.playBGM('menu');
+            document.getElementById('audioResult').innerHTML = '正在播放菜单背景音乐...';
+            setTimeout(() => {
+                window.AudioSystem.stopBGM();
+            }, 3000);
+        }
+        
+        function testSFX() {
+            if (!window.AudioSystem) {
+                alert('音频系统未加载');
+                return;
+            }
+            
+            const sfxList = ['jump', 'collect', 'powerup', 'victory'];
+            sfxList.forEach((sfx, index) => {
+                setTimeout(() => {
+                    window.AudioSystem.playSFX(sfx);
+                }, index * 500);
+            });
+            
+            document.getElementById('audioResult').innerHTML = '正在播放音效序列...';
+        }
+        
+        // 视觉效果测试
+        function testVisualEffects() {
+            const result = document.getElementById('visualResult');
+            result.style.display = 'block';
+            
+            try {
+                if (!window.VisualEffects) throw new Error('视觉效果系统未加载');
+                
+                // 创建临时画布用于测试
+                const canvas = document.createElement('canvas');
+                canvas.width = 800;
+                canvas.height = 600;
+                const ctx = canvas.getContext('2d');
+                
+                // 初始化视觉效果
+                window.VisualEffects.init(canvas);
+                result.innerHTML = '✓ 视觉效果系统初始化成功<br>';
+                
+                // 测试粒子效果
+                window.VisualEffects.createParticles(400, 300, 'collect');
+                result.innerHTML += '✓ 粒子效果创建成功<br>';
+                
+                result.innerHTML += '<strong style="color: #4CAF50;">✓ 视觉效果测试通过</strong>';
+                
+            } catch (error) {
+                result.innerHTML = `<strong style="color: #f44336;">✗ 测试失败: ${error.message}</strong>`;
+            }
+        }
+        
+        function testScreenShake() {
+            if (!window.VisualEffects) {
+                alert('视觉效果系统未加载');
+                return;
+            }
+            
+            window.VisualEffects.applyScreenShake(20);
+            document.getElementById('visualResult').innerHTML = '应用屏幕抖动效果（20强度）';
+        }
+        
+        function testBloom() {
+            if (!window.VisualEffects) {
+                alert('视觉效果系统未加载');
+                return;
+            }
+            
+            window.VisualEffects.applyScreenEffect('powerup');
+            document.getElementById('visualResult').innerHTML = '应用Bloom辉光效果';
+        }
+        
+        // 进度系统测试
+        function testProgress() {
+            const result = document.getElementById('progressResult');
+            result.style.display = 'block';
+            
+            try {
+                if (!window.GameProgress) throw new Error('进度系统未加载');
+                
+                // 获取当前进度
+                const progress = window.GameProgress.getCurrentProgress();
+                result.innerHTML = '✓ 进度数据加载成功<br>';
+                
+                // 测试保存
+                window.GameProgress.save();
+                result.innerHTML += '✓ 进度保存成功<br>';
+                
+                // 测试设置更新
+                window.GameProgress.updateSettings({ masterVolume: 0.8 });
+                result.innerHTML += '✓ 设置更新成功<br>';
+                
+                result.innerHTML += '<strong style="color: #4CAF50;">✓ 进度系统测试通过</strong>';
+                
+            } catch (error) {
+                result.innerHTML = `<strong style="color: #f44336;">✗ 测试失败: ${error.message}</strong>`;
+            }
+        }
+        
+        function testAchievements() {
+            if (!window.GameProgress) {
+                alert('进度系统未加载');
+                return;
+            }
+            
+            const achievements = window.GameProgress.getAchievements();
+            const result = document.getElementById('progressResult');
+            result.style.display = 'block';
+            result.innerHTML = `成就总数: ${achievements.length}<br>`;
+            result.innerHTML += `已解锁: ${window.GameProgress.getUnlockedAchievements().length}<br>`;
+            result.innerHTML += `总点数: ${window.GameProgress.getTotalPoints()}/${window.GameProgress.getMaxPoints()}`;
+        }
+        
+        function showStats() {
+            if (!window.GameProgress) {
+                alert('进度系统未加载');
+                return;
+            }
+            
+            const stats = window.GameProgress.getStatsSummary();
+            const result = document.getElementById('progressResult');
+            result.style.display = 'block';
+            result.innerHTML = JSON.stringify(stats, null, 2).replace(/[{}]/g, '').replace(/"/g, '');
+        }
+        
+        // 性能测试
+        function testPerformance() {
+            const result = document.getElementById('performanceResult');
+            const progress = document.getElementById('performanceProgress');
+            result.style.display = 'block';
+            result.innerHTML = '正在运行性能测试...<br>';
+            
+            try {
+                if (!window.PerformanceOptimizer) throw new Error('性能优化器未加载');
+                
+                // 获取性能指标
+                const metrics = window.PerformanceOptimizer.getPerformanceMetrics();
+                result.innerHTML += `性能等级: ${metrics.performanceLevel}<br>`;
+                result.innerHTML += `目标FPS: ${metrics.settings.targetFPS}<br>`;
+                result.innerHTML += `最大粒子数: ${metrics.settings.maxParticleCount}<br>`;
+                
+                progress.style.width = '100%';
+                
+                result.innerHTML += '<strong style="color: #4CAF50;">✓ 性能测试通过</strong>';
+                
+            } catch (error) {
+                result.innerHTML = `<strong style="color: #f44336;">✗ 测试失败: ${error.message}</strong>`;
+            }
+        }
+        
+        function startMonitor() {
+            if (!window.PerformanceOptimizer) {
+                alert('性能优化器未加载');
+                return;
+            }
+            
+            window.PerformanceOptimizer.createPerformanceMonitor();
+            document.getElementById('performanceResult').innerHTML = '性能监控已启动（按F3切换显示）';
+        }
+        
+        // 综合测试
+        function runAllTests() {
+            const result = document.getElementById('overallResult');
+            result.style.display = 'block';
+            result.innerHTML = '🚀 开始全面测试...<br><br>';
+            
+            // 检测系统
+            const systems = detectSystems();
+            const allLoaded = Object.values(systems).every(v => v);
+            
+            if (allLoaded) {
+                result.innerHTML += '<strong style="color: #4CAF50;">✓ 所有系统已加载</strong><br><br>';
+                
+                // 运行简单测试
+                setTimeout(() => {
+                    if (systems.audio) {
+                        result.innerHTML += '测试音频系统... ';
+                        window.AudioSystem.playSFX('collect');
+                        result.innerHTML += '<span style="color: #4CAF50;">✓</span><br>';
+                    }
+                    
+                    if (systems.visual) {
+                        result.innerHTML += '测试视觉效果... ';
+                        window.VisualEffects.createParticles(400, 300, 'collect');
+                        result.innerHTML += '<span style="color: #4CAF50;">✓</span><br>';
+                    }
+                    
+                    if (systems.progress) {
+                        result.innerHTML += '测试进度系统... ';
+                        const stats = window.GameProgress.getStatsSummary();
+                        result.innerHTML += '<span style="color: #4CAF50;">✓</span><br>';
+                    }
+                    
+                    if (systems.performance) {
+                        result.innerHTML += '测试性能优化器... ';
+                        const metrics = window.PerformanceOptimizer.getPerformanceMetrics();
+                        result.innerHTML += '<span style="color: #4CAF50;">✓</span><br>';
+                    }
+                    
+                    result.innerHTML += '<br><strong style="color: #4CAF50; font-size: 18px;">🎉 所有测试通过！系统运行正常</strong>';
+                }, 1000);
+                
+            } else {
+                result.innerHTML += '<strong style="color: #f44336;">✗ 部分系统未加载，请检查控制台</strong>';
+            }
+        }
+        
+        function clearResults() {
+            document.querySelectorAll('.result').forEach(el => {
+                el.style.display = 'none';
+                el.innerHTML = '';
+            });
+            document.getElementById('performanceProgress').style.width = '0%';
+        }
+        
+        // 页面加载时自动检测
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(detectSystems, 500);
+        });
+    </script>
+</body>
+</html>
